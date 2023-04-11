@@ -82,6 +82,7 @@ class PasscodeInput @JvmOverloads constructor(
         for (editText in editTextList) {
             editText.setText("")
         }
+        editTextList[0].isEnabled = true
     }
 
     private fun applyCustomProperty(attrs: AttributeSet) {
