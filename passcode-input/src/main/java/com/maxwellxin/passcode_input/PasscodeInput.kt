@@ -73,8 +73,6 @@ class PasscodeInput @JvmOverloads constructor(
     }
 
     private fun textInserted(text: String) {
-        println("sad")
-
         val index = editTextList.indexOf(currentFocus)
         if (text.isNotEmpty()) {
             //Completed and Submit
@@ -88,17 +86,17 @@ class PasscodeInput @JvmOverloads constructor(
                 }
                 return
             }
-            currentFocus!!.isEnabled = false
             editTextList[index + 1].isEnabled = true
             editTextList[index + 1].requestFocus()
+            editTextList[index].isEnabled = false
 
         } else {
             if (index == 0) {
                 return
             }
-            currentFocus!!.isEnabled = false
             editTextList[index - 1].isEnabled = true
             editTextList[index - 1].requestFocus()
+            editTextList[index].isEnabled = false
         }
     }
 
