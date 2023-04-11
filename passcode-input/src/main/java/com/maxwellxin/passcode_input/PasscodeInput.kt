@@ -4,7 +4,9 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.maxwellxin.passcode_input.databinding.SamplePasscodeInputBinding
@@ -44,6 +46,16 @@ class PasscodeInput @JvmOverloads constructor(
                 }
             }
 
+            editText.setOnKeyListener(object : OnKeyListener {
+                override fun onKey(p0: View?, p1: Int, p2: KeyEvent?): Boolean {
+                    if (p1 == KeyEvent.KEYCODE_DEL) {
+                        textRemove()
+                        return true
+                    }
+                    return false
+                }
+            })
+
             editText.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
@@ -52,7 +64,7 @@ class PasscodeInput @JvmOverloads constructor(
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
-                    textInserted(p0.toString())
+                    textInsert(p0.toString().trim())
                 }
             })
         }
@@ -60,6 +72,10 @@ class PasscodeInput @JvmOverloads constructor(
         attrs?.let {
             applyCustomProperty(it)
         }
+    }
+
+    fun focus(position: Int) {
+        editTextList[position].requestFocus()
     }
 
     fun reset() {
@@ -72,7 +88,7 @@ class PasscodeInput @JvmOverloads constructor(
         context.theme.obtainStyledAttributes(attrs, androidx.constraintlayout.widget.R.styleable.ConstraintLayout_Layout, 0, 0)
     }
 
-    private fun textInserted(text: String) {
+    private fun textInsert(text: String) {
         val index = editTextList.indexOf(currentFocus)
         if (text.isNotEmpty()) {
             //Completed and Submit
@@ -89,15 +105,24 @@ class PasscodeInput @JvmOverloads constructor(
             editTextList[index + 1].isEnabled = true
             editTextList[index + 1].requestFocus()
             editTextList[index].isEnabled = false
-
-        } else {
-            if (index == 0) {
-                return
-            }
-            editTextList[index - 1].isEnabled = true
-            editTextList[index - 1].requestFocus()
-            editTextList[index].isEnabled = false
         }
+    }
+
+    private fun textRemove() {
+        val index = editTextList.indexOf(currentFocus)
+
+        if (index == 0) {
+            return
+        }
+
+        if (editTextList[index].text.isNotEmpty()) {
+            return
+        }
+
+        editTextList[index - 1].isEnabled = true
+        editTextList[index - 1].requestFocus()
+
+        editTextList[index].isEnabled = false
     }
 
     /**

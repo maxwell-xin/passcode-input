@@ -126,6 +126,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="@drawable/rectangle_gray_orange_border"
+        android:enabled="false"
         android:inputType="numberPassword"
         android:maxLength="1"
         android:textAlignment="center"
