@@ -39,14 +39,6 @@ class PasscodeInput @JvmOverloads constructor(
     private var listener: PasscodeListener? = null
 
     init {
-        setUp()
-
-        attrs?.let {
-            applyCustomProperty(it)
-        }
-    }
-
-    fun setUp() {
         for (editText in editTextList) {
             editText.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) {
@@ -76,7 +68,12 @@ class PasscodeInput @JvmOverloads constructor(
                 }
             })
         }
+
+        attrs?.let {
+            applyCustomProperty(it)
+        }
     }
+
 
     private fun applyCustomProperty(attrs: AttributeSet) {
         context.theme.obtainStyledAttributes(attrs, androidx.constraintlayout.widget.R.styleable.ConstraintLayout_Layout, 0, 0)
@@ -95,6 +92,7 @@ class PasscodeInput @JvmOverloads constructor(
 
     private fun textInsert(text: String) {
         val index = editTextList.indexOf(currentFocus)
+
         if (text.isNotEmpty()) {
             //Completed and Submit
             if (index == 5) {
@@ -115,19 +113,15 @@ class PasscodeInput @JvmOverloads constructor(
 
     private fun textRemove() {
         val index = editTextList.indexOf(currentFocus)
+        val editText: EditText = editTextList[index]
 
-        if (index == 0) {
-            return
+        if (editText.text.isNotEmpty()) {
+            editText.text.clear()
+        } else if (index > 0) {
+            editText.isEnabled = false
+            editTextList[index - 1].isEnabled = true
+            editTextList[index - 1].requestFocus()
         }
-
-        if (editTextList[index].text.isNotEmpty()) {
-            return
-        }
-
-        editTextList[index - 1].isEnabled = true
-        editTextList[index - 1].requestFocus()
-
-        editTextList[index].isEnabled = false
     }
 
     /**
