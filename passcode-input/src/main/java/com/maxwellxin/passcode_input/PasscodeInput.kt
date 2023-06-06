@@ -39,6 +39,14 @@ class PasscodeInput @JvmOverloads constructor(
     private var listener: PasscodeListener? = null
 
     init {
+        setUp()
+
+        attrs?.let {
+            applyCustomProperty(it)
+        }
+    }
+
+    fun setUp() {
         for (editText in editTextList) {
             editText.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) {
@@ -68,10 +76,10 @@ class PasscodeInput @JvmOverloads constructor(
                 }
             })
         }
+    }
 
-        attrs?.let {
-            applyCustomProperty(it)
-        }
+    private fun applyCustomProperty(attrs: AttributeSet) {
+        context.theme.obtainStyledAttributes(attrs, androidx.constraintlayout.widget.R.styleable.ConstraintLayout_Layout, 0, 0)
     }
 
     fun focus(position: Int) {
@@ -83,10 +91,6 @@ class PasscodeInput @JvmOverloads constructor(
             editText.setText("")
         }
         editTextList[0].isEnabled = true
-    }
-
-    private fun applyCustomProperty(attrs: AttributeSet) {
-        context.theme.obtainStyledAttributes(attrs, androidx.constraintlayout.widget.R.styleable.ConstraintLayout_Layout, 0, 0)
     }
 
     private fun textInsert(text: String) {
